@@ -1,0 +1,13 @@
+.Navigation {
+    ul.routes {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+
+        .active button {
+        background-color: red;
+        // background-color: var(--bg-color);
+    }
+    }
+
+}

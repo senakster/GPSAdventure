@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="698.51453"
+   height="337.14288"
+   id="svg4476"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="flowchart start symbol.svg">
+  <defs
+     id="defs4478" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.76173174"
+     inkscape:cx="289.96595"
+     inkscape:cy="103.20207"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     fit-margin-top="30"
+     fit-margin-left="30"
+     fit-margin-right="30"
+     fit-margin-bottom="30"
+     inkscape:snap-global="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="706"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4481">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-18.12054,-149.79075)">
+    <path
+       style="fill:#ffff8b;fill-opacity:1;stroke:none"
+       d="m 198.67073,318.36218 0,138.57143 -9.57578,0 c -14.80963,0 -37.8156,-6.01408 -58.64394,-15.33033 -34.719026,-15.52938 -62.939886,-46.3973 -77.366044,-84.62283 -6.619234,-17.53924 -6.619234,-59.6973 0,-77.23654 14.426158,-38.22553 42.647018,-69.09346 77.366044,-84.62284 20.82834,-9.31626 43.83431,-15.33032 58.64394,-15.33032 l 9.57578,0 0,138.57143 z"
+       id="path4505"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#ffff8b;fill-opacity:1;stroke:none"
+       id="rect4509"
+       width="339.41415"
+       height="277.14288"
+       x="196.67073"
+       y="179.79076" />
+    <path
+       style="fill:#ffff8b;fill-opacity:1;stroke:none"
+       d="m 534.08488,318.3622 0,138.57144 9.57578,0 c 14.80963,0 37.8156,-6.01408 58.64395,-15.33033 34.71903,-15.52938 62.93989,-46.3973 77.36604,-84.62284 6.61925,-17.53924 6.61925,-59.6973 0,-77.23654 -14.42615,-38.22554 -42.64701,-69.09347 -77.36604,-84.62285 -20.82835,-9.31626 -43.83432,-15.33032 -58.64395,-15.33032 l -9.57578,0 0,138.57144 z"
+       id="path4505-5"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:11px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="288.92859"
+       y="344.13171"
+       id="text5055"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5057"
+         x="288.92859"
+         y="344.13171"
+         style="font-size:72px">Start</tspan></text>
+  </g>
+</svg>

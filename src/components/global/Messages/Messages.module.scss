@@ -1,0 +1,51 @@
+    .toggleBtn {
+    position: fixed;
+    top: 0;
+    right: 0;
+    }   
+.Messages {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    color: white;
+    z-index: 10000;
+    height: 0;
+    opacity: 0;
+    transition: height 200ms linear, opacity 500ms linear;
+    // overflow: hidden;
+    backdrop-filter: blur(10px);
+
+    &.active {
+        height: 100%;
+        opacity: 1;
+        .content {
+        height: 100%;
+        }
+    }
+    .content {
+        height: 0;
+        z-index: 10001;
+        text-shadow: 0 0 3px black;
+        overflow: hidden;
+    }
+
+    .bg{
+        background-color: rgba(0,0,0,0.5);
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        // z-index: 9998;
+    }
+    .filter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        // z-index: 9999;
+    }
+}

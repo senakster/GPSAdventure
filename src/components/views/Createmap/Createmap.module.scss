@@ -1,0 +1,14 @@
+.Createmap {
+    .content {
+        display: flex;
+        .mapContainer {
+            // position: fixed;
+            width: 70%;
+            height: 100%;
+            // display: flex;
+        }
+        .eventsContainer {
+            width: 30%;
+        }
+    }
+}
