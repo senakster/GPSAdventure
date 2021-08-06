@@ -29,13 +29,13 @@ const Navigation: React.FC<any> = ({history}) => {
   /* */
   return (
     <div className={styles.Navigation} data-testid="Navigationtest">
-    <span>{navRoutes.find((r) => r.path === location)?.name}</span>
+    {/* <span>{navRoutes.find((r) => r.path === location)?.name}</span> */}
     <nav>
       <ul className={styles.routes}>
         {navRoutes.map((r) =>
           <li key={r.path} className={`${r.path} ${location === r.path ? styles.active : ''}`}>
             <div className="routes">
-              <button value={r.path} onClick={navigate}>{r.name}</button>
+              <Button label={r.name} value={r.path} onClick={navigate} />
             </div>
           </li>
         )}

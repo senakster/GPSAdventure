@@ -4,15 +4,16 @@ import Map from 'components/ui/Map/Map.lazy'
 import Events from 'components/ui/Events/Events';
 import Button from 'components/ui/Button/Button';
 import { ActionType, useStateContext } from '_state';
-import { IEvent } from '_state/reducers/eventReducer';
-
-
+import { TAdventureProgress } from '_state/reducers/adventureReducer';
+import { getUUID } from '_helpers';
 
 const Createmap: React.FC = () => {
-
+  const {state} = useStateContext()
   return (
     <div className={styles.Createmap} data-testid={`Createmaptest`}>
-      <MapSelect />
+      <span>{state.adventure.list.find(a => a.id === state.adventure.currentAdventure)?.name || 'EDIT MAP'}</span>
+      { state.adventure.currentAdventure === '' ? <MapSelect /> : 
+      <>
       <MapSave />
       <div className={styles.content}>
         <div className={styles.mapContainer}>
@@ -22,6 +23,8 @@ const Createmap: React.FC = () => {
           <Events />
         </div>
       </div>
+      </>
+    }
     </div>
   );
 }
@@ -29,39 +32,69 @@ const Createmap: React.FC = () => {
 export default Createmap;
 
 export const MapSelect: React.FC = () => {
-  // const { dispatch } = useStateContext();
+  const { dispatch } = useStateContext();
   const { adventure } = useStateContext().state;
-  const { currentAdventure } = useStateContext().state.adventure;
   // const [ CAEvents, setCAEvents ] = React.useState([] as IEvent[])
 
-  React.useEffect(() => {
-    const nca = adventure.list.find((a) => a.id === currentAdventure);
-    console.log(nca)
-  }, [currentAdventure])
+  const [caid, setCaid] = React.useState(
+    adventure?.list.find((a) => a.id === adventure.currentAdventure)?.id ||
+      adventure.list[0]?.id ? adventure.list[0].id
+      : ''
+  )
+
+  // React.useEffect(() => {
+  //   const nca = adventure.list.find((a) => a.id === adventure.currentAdventure);
+  //   // console.log(nca)
+  // }, [adventure.list, adventure.currentAdventure])
 
   function loadMap(e: any) {
-    console.log(e.target);
+    const nm = adventure.list.find((a) => a.id === caid);
+    dispatch && dispatch({
+      type: ActionType.LOAD_MAP,
+      payload: caid,
+    })
+    nm && dispatch && dispatch({
+      type: ActionType.LOAD_EVENTS,
+      payload: nm
+    })
+  }
+  function newMap(e: any) {
+     dispatch && dispatch({
+      type: ActionType.LOAD_MAP,
+      payload: getUUID(),
+    })
+    dispatch && dispatch({
+      type: ActionType.CLEAR_EVENTS,
+    })
   }
   function handleChange(e: any) {
-    console.log(e.target);
+    setCaid(e.target.value);
   }
 
   return (
     <div className={styles.mapSelect}>
-      <select onChange={handleChange}>
+      <select onChange={handleChange} value={caid}>
+        {/* <option value={getUUID()}>Start New Map</option> */}
         {adventure.list.map((a, i) => 
           <option key={i} value={a.id}>{`${a.name} ${a.lastUpdate && `[${new Date(a.lastUpdate).toLocaleString()}]`}`}</option>
           )}
       </select>
       <Button label={`Load Map`} onClick={loadMap} />
+      <Button label={`New Map`} onClick={newMap} />
     </div>
   )
 }
 
 const MapSave: React.FC = () => {
-  const [ state, setState] = React.useState({title: 'New Map'})
+  let progressionTypes: string[] = [];
+  for (const p in TAdventureProgress) {
+    progressionTypes = [...progressionTypes, p];
+  }
+
   const { dispatch } = useStateContext();
-  const { events } = useStateContext().state
+  const { events, user, adventure } = useStateContext().state
+
+  const [state, setState] = React.useState({ title: adventure.list.find(a => a.id === adventure.currentAdventure)?.name || 'New Map', progression: adventure.list.find(a=>a.id===adventure.currentAdventure)?.progression || progressionTypes[0]})
 
   function handleInputChange(e: any) {
     setState({...state, [e.target.name]: e.target.value})
@@ -69,13 +102,35 @@ const MapSave: React.FC = () => {
   function saveMap() {
     dispatch && dispatch({
       type: ActionType.SAVE_MAP,
-      payload: {name: state.title, list: events.list, listOrder: events.listOrder}
+      payload: {id: adventure.currentAdventure, name: state.title, progression: state.progression, list: events.list, listOrder: events.listOrder, ownerId: user.data.id}
     })
-    console.log(state.title, events)
+    // console.log(state.title, events)
   }
+  function closeMap() {
+    dispatch && dispatch({
+      type: ActionType.LOAD_MAP,
+      payload: '',
+    })
+  }
+  function deleteMap(id: string) {
+    closeMap()
+    dispatch && dispatch({
+      type: ActionType.DELETE_MAP,
+      payload: adventure.currentAdventure,
+    })
+  }
+
   return (
   <div className={styles.mapSave}>
       <input type="text" name={`title`} value={`${state.title}`} onChange={handleInputChange}/>
+      <select name='progression' value={state.progression} onChange={handleInputChange}>
+        {progressionTypes.map((t) => 
+          <option key={t} value={t}>{t}</option>
+        )}
+      </select>
+      {/* {JSON.stringify(TAdventureProgress)} */}
       <Button label={`save`} onClick={saveMap}/>
+      <Button label='Cancel' onClick={closeMap} />
+      <Button label='Delete' onClick={deleteMap} />
   </div>)
 }

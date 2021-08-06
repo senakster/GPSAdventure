@@ -1,11 +1,14 @@
 import React from 'react';
 import './leaflet.css';
+import '_helpers/icons.scss';
 import styles from './Map.module.scss';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
 import L, { LatLngExpression, LocationEvent } from 'leaflet';
 import { ActionType, useStateContext } from '_state';
 import { defaultEventData, IEvent, IEventMedia } from '_state/reducers/eventReducer';
 import MarkerIcons from '_helpers/leaflet';
+import { mapTilesets } from '_themes'
+import { truncate, parse } from '_helpers/fn';
 
 const c = {
   lat: 55.674753,
@@ -17,7 +20,13 @@ type MapProps = {
   adventure?: boolean | IEvent[] | any; 
 }
 const Maps: React.FC<MapProps> = ({testing}) => {
-  const { list, listOrder} = useStateContext().state.events
+
+  
+  // React.useEffect(() => {
+  //   console.log('list/listOrder update')
+  //   setMarkers([]);
+  //   setTimeout(() => {setMarkers(list)}, 100)
+  // },[list, listOrder])
   // const center = map.locate()
   return (
     <div className={styles.Map} data-testid="Maptest">
@@ -27,16 +36,11 @@ const Maps: React.FC<MapProps> = ({testing}) => {
         zoom={13}
         scrollWheelZoom={true} >
         <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          // {...mapTilesets.dark}
+          {...mapTilesets.light}
+
         />
-        {list.map((e, i) =>
-          <EventMarker
-            key={e.id}
-            event={e}
-            id={e.id}
-            order={{p: listOrder.indexOf(e.id as string), of: list.length}}
-          />)}
+        <EventLayer />
         {<AvatarMarker /> }
         <MapControls />
         {!testing && <Path />}
@@ -46,6 +50,34 @@ const Maps: React.FC<MapProps> = ({testing}) => {
   );
 }
 
+const EventLayer: React.FC = () => {
+  const { list, listOrder } = useStateContext().state.events
+  
+  // const [markers, setMarkers] = React.useState([] as IEvent[])
+  // React.useEffect(() => {
+  //   forceUpdate()
+  // },[list, listOrder])
+
+
+  // // HACK FORCE UPDATE MARKERS
+  // function forceUpdate() {
+  //   setMarkers([]);
+  //   setTimeout(() => {setMarkers(list)}, 10)
+  // }
+  
+  return (
+    <>
+      {list.map((e, i) =>
+        <EventMarker
+          key={e.id}
+          event={e}
+          id={e.id}
+          order={{ p: listOrder.indexOf(e.id as string), of: list.length }}
+        />)
+      }
+    </>
+  )
+}
 
 /**
  * triggers plain js DOM-manipulation
@@ -114,6 +146,7 @@ const AvatarMarker: React.FC = (): JSX.Element => {
   const { dispatch } = useStateContext()
   const { fetch } = useStateContext().state.state
   const { centerOnAvatar, position } = useStateContext().state.state
+  
   function setPosition(position: L.LatLng) {
     dispatch && dispatch({
       type: ActionType.SET_POSITION,
@@ -236,10 +269,12 @@ const EventMarker: React.FC<any> = ({ event, order }) => {
 
   function updateEventPosition() {
     const marker = markerRef.current
-    marker && setPosition(marker.getLatLng())
+    const ll = marker.getLatLng()
+    // console.log(ll)
+    marker && setPosition(ll)
     dispatch && dispatch({
       type: ActionType.UPDATE_EVENT,
-      payload: { ...event, position: marker.getLatLng() }
+      payload: { ...event, position: ll }
     })
   }
   const eventHandlers = 
@@ -260,7 +295,7 @@ const EventMarker: React.FC<any> = ({ event, order }) => {
   const iconType = 
   order.of > 1 ?
   order.p === 0 ? 'start' :
-  order.p >= order.of - 1 ? 'finish' : 
+  order.p >= order.of - 1 ? 'treasure' : 
   'exclamation' : 
   'exclamation';
 
@@ -276,7 +311,7 @@ const EventMarker: React.FC<any> = ({ event, order }) => {
       ref={markerRef}>
       <Popup>
         <h3>{event.title}</h3>
-        <p>{event.description}</p>
+        <p>{parse(truncate(event.description, 40, false))}</p>
         <ul>
           {event.media.map((m: IEventMedia, i: number) => <MediaInstance key={i} {...m}/>)}
         </ul>
@@ -289,17 +324,22 @@ const EventMarker: React.FC<any> = ({ event, order }) => {
   )
 }
 
-const MediaInstance: React.FC<any> = ({type, url}) => {
-  switch(type) {
-    case 'video': 
-      return <li>{`Video:`}<a href={url} target="_blank" rel="noreferrer">{url}</a></li>
-    case 'audio': 
-      return <li>{`Audio:`}<a href={url} target="_blank" rel="noreferrer">{url}</a></li>
-    case 'image':
-      return <li>{`Image: `}<a href={url} target="_blank" rel="noreferrer">{url}</a></li>
-    default:  
-      return null;
-  }
+const MediaInstance: React.FC<any> = ({title, type, url}) => {
+  return <li><a href={url} target="_blank" rel="noreferrer">{title || type}</a></li>
+  // switch(type) {
+  //   case 'youtube': 
+  //     return <li><a href={url} target="_blank" rel="noreferrer">{title || type}</a></li>
+  //   case 'video': 
+  //     return <li><a href={url} target="_blank" rel="noreferrer">{title || type}</a></li>
+  //   case 'audio':
+  //     return <li><a href={url} target="_blank" rel="noreferrer">{title || type}</a></li>
+  //   case 'image':
+  //     return <li><a href={url} target="_blank" rel="noreferrer">{title || type}</a></li>
+  //   case 'HTML':
+  //     return <li><a href={url} target="_blank" rel="noreferrer">{title || type}</a></li>
+  //   default:  
+  //     return null;
+  // }
 }
 const NewEventPopup: React.FC<any> = ({ position, newEvent, message }) => {
   return (

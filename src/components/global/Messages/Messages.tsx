@@ -1,7 +1,6 @@
 import Button from 'components/ui/Button/Button';
 import React from 'react';
 import { ActionType, useStateContext } from '_state';
-import Themes from 'components/global/Themes/Themes';
 import styles from './Messages.module.scss';
 
 

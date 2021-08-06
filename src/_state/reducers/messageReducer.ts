@@ -1,7 +1,7 @@
 import { loadState } from 'components/global/Storage/Storage'
 import { getUUID } from '_helpers/fn'
 
-type Context = {
+export type Context = {
     active: boolean;
     messages: TMessage[];
 }

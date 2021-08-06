@@ -12,39 +12,52 @@ export type TTrackPoint = {
     track: LatLngExpression;
 }
 
-export type TUserAdventureData = {
-    id: string;
-    events: IEvent[];
-    completed: boolean;
-    route: TTrackPoint[],
-    progress: any[];
+export enum TAdventureProgress {
+    Ordered = 'Ordered',
+    Unordered = 'Unordered',
+    Sandbox = 'Sandbox'
 }
-
-type Adventure = EventData & {
+export type TAdventureCache = {
+    active: boolean;
+    event: IEvent | null;
+}
+export type TAdventure = EventData & {
     id: string;
+    ownerId: string;
     name: string;
     lastUpdate?: number;
+    progression: TAdventureProgress;
+    cache: TAdventureCache;
 }
 type Context = {        
     avatar: TAvatar;
     currentAdventure: string;
-    list: Adventure[] // should be set from database
-
+    list: TAdventure[] // should be set from database
 }
 
 export enum ActionType {
     MOVE_AVATAR = 'Move Avatar',
-    SAVE_MAP = 'Save Map'
+    SAVE_MAP = 'Save Map',
+    LOAD_MAP = 'Load Map',
+    DELETE_MAP = 'Delete Map',
+    TOGGLE_CACHE = 'Toggle Cache',
+    SET_EVENT = 'Set Event'
 }
 export type Action =
-    | { type: ActionType.MOVE_AVATAR}
-    | { type: ActionType.SAVE_MAP, payload: EventData & {name: string}}
+    | { type: ActionType.MOVE_AVATAR, payload: LatLng}
+    // | { type: ActionType.SAVE_MAP, payload: EventData & {id: string, name: string, progression: TAdventureProgress, ownerId: string}}
+    | { type: ActionType.SAVE_MAP, payload: TAdventure }
+    | { type: ActionType.LOAD_MAP, payload: string }
+    | { type: ActionType.DELETE_MAP, payload: string }
+    | { type: ActionType.TOGGLE_CACHE, payload: {id: string, event: IEvent | undefined} }
+
 
 
 const c = {
     lat: 55.674753,
     lng: 12.584722,
 }
+
 export const initialState: Context = 
 loadState('adventure') || 
 {
@@ -61,19 +74,60 @@ function isEventData(adventure: EventData | any): adventure is EventData{
     return e.list !== undefined &&
         e.listOrder !== undefined
 }
+// TAdventureData TYPEGUARD
+function isAdventureData(adventure: EventData | any): adventure is TAdventure {
+    const e = adventure as TAdventure;
+    return e.list !== undefined &&
+        e.listOrder !== undefined &&
+        e.id !== undefined &&
+        e.name !== undefined &&
+        e.ownerId !== undefined
+}
+
+function adventureFromEventData (payload: EventData & {id: string, name: string, progression: TAdventureProgress, ownerId: string}): TAdventure {
+   return { ...payload, id: payload.id !== '' ? payload.id : getUUID(), name: payload.name, lastUpdate: new Date().getTime(), progression: payload.progression, ownerId: payload.ownerId, cache: { active: false, event: null } }
+}
 export const reducer = (state = initialState, action: Action): Context => {
     switch (action.type) {
         case ActionType.MOVE_AVATAR:
-            console.log('MOVE')
-        return state
+            return {
+                ...state,
+                avatar: {
+                    ...state.avatar,
+                    position: action.payload,
+                } 
+            }
         case ActionType.SAVE_MAP:
-            const na: Adventure | false = isEventData(action.payload)? 
-            {id: getUUID(), ...action.payload, name: action.payload.name, lastUpdate: new Date().getTime() } : false
+            const na: TAdventure | false = isAdventureData(action.payload)? 
+                adventureFromEventData(action.payload) : false
             return na ? 
             { ...state, 
                 list: [...state.list.filter((a) => a.id !== na.id), na]
             }
             : state; 
+        case ActionType.LOAD_MAP:
+            return {
+                ...state,
+                currentAdventure: action.payload
+            }
+        case ActionType.DELETE_MAP:
+            // console.log(action.payload)
+            return {
+                ...state,
+                list: [...state.list.filter(a => a.id !== action.payload)]
+            }
+        case ActionType.TOGGLE_CACHE:
+            // console.log(action.payload)
+            const ua = state.list.find(a => a.id === action.payload.id) as TAdventure
+            ua.cache = ua.cache ? ua.cache : {active: false, event: null} 
+            ua.cache.event = action.payload.event ? action.payload.event : null;
+            console.log(ua)
+            return {
+                ...state,
+                list: [...state.list.filter(a => a.id !== action.payload.id),
+                    {...ua, cache: {...ua.cache, active: !ua.cache.active}}
+                ]
+            }
         default:
             return state
     }

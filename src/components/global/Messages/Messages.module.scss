@@ -21,11 +21,12 @@
         height: 100%;
         opacity: 1;
         .content {
-        height: 100%;
+        min-height: 100%;
         }
     }
     .content {
         height: 0;
+        min-height: 0;
         z-index: 10001;
         text-shadow: 0 0 3px black;
         overflow: hidden;

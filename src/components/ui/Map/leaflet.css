@@ -1,1 +1,7 @@
 @import url('https://unpkg.com/leaflet@1.7.1/dist/leaflet.css');
+
+.leaflet-container {
+    /* background-color: var(--background-color); */
+    background-color: inherit;
+
+}

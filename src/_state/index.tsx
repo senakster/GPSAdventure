@@ -3,13 +3,17 @@ import * as State from './reducers/stateReducer';
 import * as Event from './reducers/eventReducer';
 import * as Adventure from './reducers/adventureReducer';
 import * as Messages from './reducers/messageReducer';
+import * as User from './reducers/userReducer';
+
 // import * as Themes from './reducers/themeReducer.ts'; 
 
 export interface Context {
     state: typeof State.initialState;
     events: typeof Event.initialState;
     adventure: typeof Adventure.initialState;
-    messages: typeof Messages.initialState;
+    messages: Messages.Context;
+    user: User.Context;
+
     // themes: typeof Themes.initialState;
 }
 
@@ -18,6 +22,8 @@ export const ActionType = {
     ...Event.ActionType, 
     ...Adventure.ActionType, 
     ...Messages.ActionType, 
+    ...User.ActionType,
+
     // ...Themes.ActionType,
 
 }
@@ -26,6 +32,8 @@ export type ActionType = State.ActionType
 | Event.ActionType 
 | Adventure.ActionType 
 | Messages.ActionType 
+| User.ActionType
+
 // | Themes.ActionType
 
 export type Action = {type: ActionType, payload?: any };
@@ -43,6 +51,7 @@ export const initialState: Context = {
     events: Event.initialState,
     adventure: Adventure.initialState,
     messages: Messages.initialState,
+    user: User.initialState
     // themes: Themes.initialState,
 };
 const context = React.createContext<Store>({ state: initialState });
@@ -58,26 +67,27 @@ export const StateProvider = ({ children }: any) => {
     const [state, stateDispatch] = useReducer(State.reducer, State.initialState);
     const [events, eventDispatch] = useReducer(Event.reducer, Event.initialState);
     const [adventure, adventureDispatch] = useReducer(Adventure.reducer, Adventure.initialState);
+    const [user, userDispatch] = useReducer(User.reducer, User.initialState);
     // const [themes, themesDispatch] = useReducer(Themes.reducer, Themes.initialState);
 
     // Combine Dispatches
     // LINT-WARNING: React Hook useCallback received a function whose dependencies are unknown. Pass an inline function instead.eslintreact-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const combinedDispatch = React.useCallback(
-        combineDispatch(stateDispatch, eventDispatch, adventureDispatch, messagesDispatch, 
+        combineDispatch(stateDispatch, eventDispatch, adventureDispatch, messagesDispatch, userDispatch
             // themesDispatch
             ), 
-        [stateDispatch, combineDispatch, adventureDispatch, messagesDispatch, 
+        [stateDispatch, combineDispatch, adventureDispatch, messagesDispatch, userDispatch
             // themesDispatch
         ],
     );
 
     // Combine States
     const combinedState = React.useMemo(() => (
-        { state, events, adventure, messages, 
+        { state, events, adventure, messages, user
             // themes
         }
-        ), [state, events, adventure, messages, 
+        ), [state, events, adventure, messages, user
             // themes
         ]);
 

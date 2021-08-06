@@ -4,10 +4,8 @@ import { useStateContext } from '_state';
 
 const Storage: React.FC = () => {
   // const { dispatch } = useStateContext();
-  const { events } = useStateContext().state;
+  const { events, adventure } = useStateContext().state;
   const { list, listOrder } = useStateContext().state.events;
-
-  const { adventure } = useStateContext().state;
   // const {  } = useStateContext().state.adventure;
   /**
    * Load State in const initialState in reducer
@@ -25,9 +23,10 @@ const Storage: React.FC = () => {
 
   React.useEffect(() => {
     saveState('adventure', adventure)
+    console.log('save', adventure)
     // Disable lint - controlling rerenders
     // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [])
+  }, [adventure.list])
   return (
     <div className={styles.Storage}>
     <button onClick={clearStorage}>clear storage</button>

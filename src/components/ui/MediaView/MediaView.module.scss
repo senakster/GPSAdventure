@@ -1,5 +1,5 @@
 .MediaView {
-   .mediaView {    
+   .YTView {    
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
     height: 0;
@@ -10,5 +10,30 @@
     width: 100%;
     height: 100%;
         }
+    }
+    .videoView{
+    max-width: 100%;
+    max-height: 100%;
+            video {
+        max-width: 100%;
+        max-height: 100%;
+        }
+    }
+    .HTMLView {
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    }
+    .audioView{
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    }
+    .imageView {
+        img {
+        max-width: 100%;
+        max-height: 100%;
+        }
+
     }
 }

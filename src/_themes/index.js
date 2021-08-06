@@ -8,6 +8,9 @@ import { createGlobalStyle  } from 'styled-components'
 import vividTheme from './theme.vivid'
 import paleTheme from './theme.pale'
 import nightTheme from './theme.night'
+import darkTheme from './theme.dark'
+
+export { mapTilesets } from './mapTiles'
 
 function t(c) {
   return {
@@ -25,9 +28,10 @@ function t(c) {
 
 
 export const themes = [
-  {id: 0, name: 'pale', theme: t(paleTheme) },
+  {id: 0, name: 'dark', theme: t(darkTheme) },
   {id: 1, name: 'vivid', theme: t(vividTheme) },
   { id: 2, name: 'night', theme: t(nightTheme) },
+  { id: 3, name: 'pale', theme: t(paleTheme) },
 
 ]
 
@@ -39,6 +43,8 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
   :root {
+    --text-color: ${({ theme }) => theme?.text ? theme.text : 'black'};
+    --background-color: ${({ theme }) => theme?.body ? theme.body : 'white'};
     --primary-color: ${({ theme }) => theme?.primaryColor ? theme.primaryColor : 'darkgrey'};
     --secondary-color: ${({ theme }) => theme?.secondaryColor ? theme.secondaryColor : 'white'};
     --primary-dark-color: ${({ theme }) => theme?.primaryDarkColor || 'black'};
@@ -56,6 +62,5 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    transition: all 250ms linear;
+    transition: background 250ms ease-in, color 250ms linear;
   }`
-

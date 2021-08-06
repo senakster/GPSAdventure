@@ -1,0 +1,21 @@
+.GeoCache {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100%;
+    width: 100%;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    .bg {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: var(--background-color);
+        opacity: .7;
+        z-index: -1;
+    }
+    .content {
+        padding: 2em;
+    }
+}

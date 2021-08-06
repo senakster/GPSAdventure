@@ -1,0 +1,33 @@
+.leaflet-marker-icon {
+    &.leaflet-avatar-icon {
+      animation: glow 2000ms infinite;
+    }
+    &.active {
+    animation: glow 2000ms infinite;
+    }
+}
+
+
+@keyframes glow {
+  0% {
+      filter: drop-shadow(0 0 .1em var(--primary-dark-color));
+    }
+  50% {
+      filter: drop-shadow(0 0 1em var(--primary-color));
+    }
+  100% {
+      filter: drop-shadow(0 0 .1em var(--primary-dark-color));
+    }
+}
+
+@keyframes aurora {
+  0% {
+      filter: drop-shadow(0em 0em .1em var(--background-color));
+    }
+  50% {
+      filter: drop-shadow(0em 0em 1em var(--background--color));
+    }
+  100% {
+      filter: drop-shadow(0em 0em .1em var(--background-color));
+    }
+}

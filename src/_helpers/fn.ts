@@ -2,7 +2,12 @@ import { history } from "./history";
 import {v4} from "uuid"
 import parse from 'html-react-parser'
 
-export const helpers = {
+/**
+ * HTML REACT PARSER
+ */
+export {parse}
+
+const helpers = {
     navHome,
     navRoute,
     capitalize,
@@ -11,7 +16,9 @@ export const helpers = {
     canConnect,
     embedYT,
     isValidHttpUrl,
-    parse
+    parse,
+    throttle,
+    truncate,
 }
 
 export default helpers;
@@ -36,7 +43,37 @@ function navRoute(destination: string): void {
     history.push(destination)
 }
 
+export function throttle (fn: Function, wait: number = 300) {
+    let inThrottle: boolean,
+        lastFn: ReturnType<typeof setTimeout>,
+        lastTime: number;
+    return function (this: any) {
+        const context = this,
+            args = arguments;
+        if (!inThrottle) {
+            fn.apply(context, args);
+            lastTime = Date.now();
+            inThrottle = true;
+        } else {
+            clearTimeout(lastFn);
+            lastFn = setTimeout(() => {
+                if (Date.now() - lastTime >= wait) {
+                    fn.apply(context, args);
+                    lastTime = Date.now();
+                }
+            }, Math.max(wait - (Date.now() - lastTime), 0));
+        }
+    };
+};
 
+export function truncate(str: string, n: number, useWordBoundary?: boolean) {
+    if (str.length <= n) { return str; }
+    const subString = str.substr(0, n - 1); // the original check
+    return (useWordBoundary
+        ? subString.substr(0, subString.lastIndexOf(" "))
+        : subString) + "&hellip;";
+        // : subString) + "...";
+};
 /**
  * TEXT MANIPULATION
  */
@@ -126,7 +163,8 @@ export async function canConnect(url: string): Promise<boolean> {
  * @returns {object} json
  */
 export async function embedYT(url: string): Promise<any> {
-    const result = await fetch(`https://www.youtube.com/oembed?url=${url}&format=json`);
+    const ncUrl = url.replace(`//www.youtube.com/`,`//www.youtube-nocookie.com/`)
+    const result = await fetch(`https://www.youtube-nocookie.com/oembed?url=${ncUrl}&format=json`);
     return result.json()
 }
 /**

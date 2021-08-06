@@ -6,10 +6,9 @@ import { capitalize } from '_helpers'
 
 const Themes: React.FC<any> = ({ variant, theme, handler }) => {
   const [cbCollapse, setCb] = React.useState(false);
-  const mini = variant === 'minimal';
   return (
     <div className={styles.Themes}>
-      {!mini && <h2>{`${capitalize(theme)} Theme`}</h2>}
+      {variant !== 'minimal' && <h2>{`${capitalize(theme)} Theme`}</h2>}
       <select onChange={handler}
         value={themes.find((t) => t.name === theme)?.id}>
         {themes.map((t) =>
@@ -23,7 +22,7 @@ const Themes: React.FC<any> = ({ variant, theme, handler }) => {
           </option>
         )}
       </select>
-      {!mini && <ColorBox cbCollapse={cbCollapse} setCb={setCb} />}
+      {variant !== 'minimal' && <ColorBox cbCollapse={cbCollapse} setCb={setCb} />}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 .Header {
+    position: relative;
     &.transparent {
         position: Relative;
         width: 100%;
@@ -8,5 +9,49 @@
         top: 0;
         left: 0;
         width: 100%;
+    }
+    &.scrollCollapse {
+        min-height: 10em;
+        height: 50vh;
+        overflow: hidden;
+        vertical-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        transition: height 300ms ease-in-out;
+        &.collapse {
+            min-height: 10em;
+            height: 10vh;
+        }
+    }
+    .title {
+        text-shadow: 0 0 1em var(--background-color);
+    }
+    .bg {
+        &::before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            // background-color: var(--background-color);
+            // opacity: 1;
+            background: linear-gradient(180deg, var(--background-color) 0%, transparent 25%, var(--background-color));
+            // box-shadow: 0 0 4em var(--background-color) inset;
+            // backdrop-filter: blur(10px);
+            z-index: 0;
+        }
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: -2;
+                    background-position: top;
+            background-repeat: no-repeat;
+            background-size: cover;
     }
 }

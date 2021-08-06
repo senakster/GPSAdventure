@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Router.module.scss';
 import views from 'components/views/index'
+import config from '_config'
 import { history } from '_helpers'
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -26,7 +27,9 @@ export const navRoutes = [
 const Routes: React.FC = () => {
   return (
     <div className={`${styles.SwitchContainer} content`} data-testid="Router">
-      <Router history={history}>
+      <Router history={history} 
+      // basename={config.basename}
+      >
         <Switch>
           {routes.map((t) => (
             <Route

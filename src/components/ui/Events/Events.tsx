@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Events.module.scss';
 import { useStateContext } from '_state'
-import { defaultEventData, IEventMedia } from '_state/reducers/eventReducer'
+import { defaultEventData, IEvent, IEventMedia } from '_state/reducers/eventReducer'
 import { ActionType } from '_state'
 import Button from 'components/ui/Button/Button';
 import { isValidHttpUrl } from '_helpers';
@@ -190,7 +190,7 @@ type MDProps = {
   toggleMediaView: () => void
 }
 const MediaDetails: React.FC<MDProps> = ({ id, active, toggleMediaView }) => {
-  // const { dispatch } = useStateContext();
+  const { dispatch } = useStateContext();
   const { list } = useStateContext().state.events
   const [media, setMedia] = React.useState([] as IEventMedia[])
 
@@ -206,7 +206,7 @@ const MediaDetails: React.FC<MDProps> = ({ id, active, toggleMediaView }) => {
     nv && setMedia(nv) 
   }
   const mediaTypes = [
-    'video', 'audio', 'image'
+    'youtube', 'HTML', 'video', 'audio', 'image'
   ]
 
   function addMedia () {
@@ -215,10 +215,21 @@ const MediaDetails: React.FC<MDProps> = ({ id, active, toggleMediaView }) => {
 
   function updateMedia() {
     let valid = true;
+
+    /** 
+     * CHECK IF VALID URL | empty string | TYPE === HTML
+     */
     media?.forEach((m) => {
-        valid = valid && m && ( m.url === '' || isValidHttpUrl(m.url) ) 
+        valid = valid && m && ( m.url === '' || isValidHttpUrl(m.url) || m.type === 'HTML') 
     })
-    media && console.log(valid, media)
+    if(media && valid) {
+      const event = list.find((e) => e.id === id) as IEvent
+      event.media = media;
+      dispatch && dispatch({
+        type: ActionType.UPDATE_EVENT,
+        payload: event,
+      })
+    }
   }
   function deleteMediaByIndex(e: any) {
     const index = parseInt(e.target.value);
@@ -243,6 +254,7 @@ const MediaDetails: React.FC<MDProps> = ({ id, active, toggleMediaView }) => {
               )}
             </select>
             </label>
+            <label>Title: <input name={`title`} data-index={i} value={m.title} onChange={handleInput}></input></label>
             <label>URL: <input name={`url`} data-index={i} value={m.url} onChange={handleInput}></input></label>
             <Button onClick={deleteMediaByIndex} value={i} variant='warning' label={'🗑'}/>
           </li>
